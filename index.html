@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herramientas de Control de Calidad - Interactivo</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: white;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+    }
+    h1 {
+        margin-bottom: 20px;
+        animation: fadeInDown 1s ease-in-out;
+    }
+    .container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: auto;
+    }
+    .card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+        animation: fadeInUp 0.8s ease forwards;
+        opacity: 0;
+        transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .card:hover {
+        transform: scale(1.03);
+        background: rgba(255, 255, 255, 0.2);
+    }
+    canvas {
+        max-height: 220px;
+    }
+    h2 {
+        margin-bottom: 10px;
+    }
+    @keyframes fadeInDown {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+</style>
+</head>
+<body>
+
+<h1>📊 Herramientas de Control de Calidad</h1>
+<div class="container" id="cards-container"></div>
+
+<script>
+const herramientas = [
+    {
+        nombre: "Hoja de verificación",
+        descripcion: "Registra datos para analizar defectos o eventos.",
+        grafico: (ctx) => new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+                datasets: [{
+                    label: 'Defectos',
+                    data: [5, 8, 6, 3, 7],
+                    backgroundColor: '#4CAF50'
+                }]
+            }
+        })
+    },
+    {
+        nombre: "Diagrama de Pareto",
+        descripcion: "Identifica las causas más importantes de un problema (80/20).",
+        grafico: (ctx) => new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Causa A', 'Causa B', 'Causa C', 'Causa D', 'Causa E'],
+                datasets: [{
+                    label: 'Frecuencia',
+                    data: [50, 30, 10, 7, 3],
+                    backgroundColor: '#FF9800'
+                }]
+            }
+        })
+    },
+    {
+        nombre: "Diagrama de Ishikawa",
+        descripcion: "Muestra causas y efectos de un problema.",
+        grafico: (ctx) => new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Máquina', 'Método', 'Material', 'Mano de obra'],
+                datasets: [{
+                    label: 'Causas',
+                    data: [40, 25, 20, 15],
+                    backgroundColor: ['#F44336', '#2196F3', '#FFEB3B', '#4CAF50']
+                }]
+            }
+        })
+    },
+    {
+        nombre: "Histograma",
+        descripcion: "Visualiza la distribución de datos.",
+        grafico: (ctx) => new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['0-10', '11-20', '21-30', '31-40', '41-50'],
+                datasets: [{
+                    label: 'Frecuencia',
+                    data: [2, 6, 8, 5, 3],
+                    backgroundColor: '#9C27B0'
+                }]
+            }
+        })
+    },
+    {
+        nombre: "Diagrama de dispersión",
+        descripcion: "Muestra la relación entre dos variables.",
+        grafico: (ctx) => new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Datos',
+                    data: [{x:1, y:2}, {x:2, y:4}, {x:3, y:6}, {x:4, y:8}],
+                    backgroundColor: '#00BCD4'
+                }]
+            },
+            options: {
+                scales: {
+                    x: { type: 'linear', position: 'bottom' }
+                }
+            }
+        })
+    },
+    {
+        nombre: "Gráficos de control",
+        descripcion: "Monitorea procesos para detectar variaciones.",
+        grafico: (ctx) => new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['1', '2', '3', '4', '5', '6'],
+                datasets: [{
+                    label: 'Producción',
+                    data: [10, 12, 11, 15, 14, 13],
+                    borderColor: '#FFC107',
+                    fill: false
+                }]
+            }
+        })
+    },
+    {
+        nombre: "Estratificación",
+        descripcion: "Organiza datos en grupos para su análisis.",
+        grafico: (ctx) => new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Proveedor 1', 'Proveedor 2', 'Proveedor 3'],
+                datasets: [
+                    { label: 'Defectos', data: [5, 3, 7], backgroundColor: '#8BC34A' }
+                ]
+            }
+        })
+    }
+];
+
+const container = document.getElementById("cards-container");
+
+herramientas.forEach((herramienta, index) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.animationDelay = `${index * 0.2}s`;
+
+    const title = document.createElement("h2");
+    title.textContent = herramienta.nombre;
+
+    const desc = document.createElement("p");
+    desc.textContent = herramienta.descripcion;
+
+    const canvas = document.createElement("canvas");
+
+    card.appendChild(title);
+    card.appendChild(desc);
+    card.appendChild(canvas);
+    container.appendChild(card);
+
+    setTimeout(() => herramienta.grafico(canvas.getContext('2d')), 500);
+});
+</script>
+
+</body>
+</html>
